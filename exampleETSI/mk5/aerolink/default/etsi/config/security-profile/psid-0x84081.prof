@@ -1,0 +1,36 @@
+#
+# SA ITS-AID
+# Generic Profile
+#
+psid  0x84081
+
+# Interval, in ms, at which full certificates are included in signed messages.
+certificate_interval        0 # always
+
+### Set which fields are included in the security headers.
+include_generation_time     true
+include_expiry_time         false
+spdu_lifetime               0            # seconds in ms, not used
+include_generation_location false
+
+### Set which relevance checks are executed.
+check_replays                         false
+check_relevance_past_freshness        true
+past_freshness_tolerance              2000000    # seconds in us, 2 seconds in past
+check_relevance_future_freshness      true
+future_freshness_tolerance            220000    # seconds in us, 220mS in future from C2C specs
+check_relevance_expiry_time           false
+check_relevance_generation_location   false
+check_relevance_certificate_expiry    true
+distance_tolerance                    0            # distance in meters
+
+### Set which consistency checks are executed.
+check_consistency_generation_location false
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                      none

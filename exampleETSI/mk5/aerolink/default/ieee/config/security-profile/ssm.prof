@@ -1,0 +1,65 @@
+### Configuration for SSM (Signal Status Message from RSU) security profile.
+
+psid  0x204095
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                       0    # SSM profile requires a cert
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # SSM profile requires true
+
+include_expiry_time                    false    # SSM profile requires false
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                          0    # arbitrary, not used
+
+include_generation_location             true    # SSM profile requires true
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # SSM profile requires false
+
+check_relevance_past_freshness          true    # SSM profile requires true
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance         5000000    # SSM profile requires 5 sec.
+
+check_relevance_future_freshness        true    # SSM profile requires true
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance      30000000    # SSM profile requires 30 sec.
+
+check_relevance_expiry_time            false    # SSM profile requires false
+
+check_relevance_generation_location    false    # SSM profile requires false
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                     0    # arbitrary, not used
+
+check_relevance_certificate_expiry      true    # SSM profile requires true
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location   true    # SSM profile requires true
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                              false    # SSM profile requires false
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance                      0    # arbitrary, not used
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                            none    # SSM profile requires none

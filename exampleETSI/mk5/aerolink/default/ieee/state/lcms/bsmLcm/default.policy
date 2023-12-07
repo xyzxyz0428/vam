@@ -1,0 +1,17 @@
+###############################################################################
+# This defines when Aerolink will start to download pseudonym certificates from
+# the SCMS server:
+# When the number of weeks of unexpired certificates is less than this value,
+# Aerolink will start to download new certificates from SCMS server.
+################################################################################
+
+pseudonym_certificate_top_off_threshold  10
+
+###############################################################################
+# This defines when Aerolink will stop downloading pseudonym certificates from
+# the SCMS server:
+# When the number of weeks of unexpired certificates is equal to or greater than
+# this value, Aerolink will stop downloading new certificates.
+################################################################################
+
+pseudonym_certificate_full_threshold     20

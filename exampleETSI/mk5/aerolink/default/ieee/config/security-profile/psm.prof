@@ -1,0 +1,65 @@
+### Configuration for PSM (Personal Safety Message to OBU) security profile.
+
+psid  0x27
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                       0    # PSM profile requires a cert
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # PSM profile requires true
+
+include_expiry_time                    false    # PSM profile requires false
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                          0    # arbitrary, not used
+
+include_generation_location             true    # PSM profile requires true
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # PSM profile requires false
+
+check_relevance_past_freshness          true    # PSM profile requires true
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance        30000000    # PSM profile requires 30 sec.
+
+check_relevance_future_freshness        true    # PSM profile requires true
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance      30000000    # PSM profile requires 30 sec.
+
+check_relevance_expiry_time            false    # PSM profile requires false
+
+check_relevance_generation_location     true    # PSM profile requires true
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                   500    # PSM profile requires 50 m.
+
+check_relevance_certificate_expiry      true    # PSM profile requires true
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location   true    # PSM profile requires true
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                              false    # PSM profile requires false
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance                      0    # arbitrary, not used
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                            none    # PSM profile requires none

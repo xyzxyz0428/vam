@@ -1,0 +1,435 @@
+#!/bin/bash
+
+APPNAME=exampleETSI
+
+# lazy-pre-pend $1 to PATH
+pathadd() {
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="$1${PATH:+":$PATH"}"
+    fi
+}
+
+# source or execute the given hook (as appropriate, if it exists)
+run_hook()
+{
+    # did we get a hook to run?
+    if [ ${1} ] ; then
+        HOOK=${PERSISTDIR}/${1}
+        # does it exist?
+        if [ -f ${HOOK} ]; then
+            # is it executable?
+            if [ -x ${HOOK} ]; then
+                ${HOOK}
+            # else, can we source it?
+            elif [ -r ${HOOK} ]; then
+                . ${HOOK}
+            fi
+        fi
+    fi
+}
+
+##############################################################################
+# Self promote to root
+##############################################################################
+if [ -n "$EUID" ] && [ $EUID -ne 0 ] ; then
+  CMD="$0 $@"
+  exec sudo -E sh -c "$CMD"
+fi
+
+##############################################################################
+# Parameter parsing
+##############################################################################
+
+# Optional 'Mode'
+if [ $# -gt 1 ] ; then
+  MODE=$2
+fi
+
+# Optional 'Extras'
+if [ $# -gt 2 ] ; then
+  EXTRA=$3
+fi
+
+##############################################################################
+# Defaults
+##############################################################################
+
+# MODE controls which configurations are used. Default: obu
+if [ -z "$MODE" ] ; then
+  MODE="obu"
+fi
+
+if [ -z "$BOARD" ] ; then
+  # try /proc/hwversion first, then check x86 and then fallback to hostname
+  if [ -e /proc/hwversion ] ; then
+    BOARD=`cat /proc/hwversion | cut -f 1 -d " "`
+  elif [ -f /.dockerenv ] ; then
+    BOARD=docker_x86_64
+  elif [ `uname -m` = "i686" ] ; then
+    BOARD=i686
+  elif [ `uname -m` = "x86_64" ] ; then
+    BOARD=x86_64
+  elif [ `uname -m` = "i.MX6_Cohda_Wireless_MK5" ] ; then
+    BOARD=mq5
+  elif [ `hostname` = "sta1385-mtp-sqi" ] ; then
+    BOARD=secton
+    export SECTON_REMOTE_INTERFACE=eth1
+  elif [[ `hostname` =~ ^PROCONNECT- ]]; then
+    BOARD=vcu2
+    export SECTON_REMOTE_INTERFACE=eth1
+  else
+    BOARD=`hostname`
+  fi
+fi
+# Convert to lower case
+BOARD=$(echo ${BOARD} | tr '[:upper:]' '[:lower:]')
+
+if [ -z "${APPDIR}" ] ; then
+  case ${BOARD} in
+    "mq5")
+      APPDIR=$(fullpath    $(dirname $0))
+      ;;
+    *)
+      APPDIR=$(readlink -f $(dirname $0))
+      ;;
+  esac
+  if [ -d ${APPDIR}/${APPNAME} ] ; then
+    APPDIR="${APPDIR}/${APPNAME}"
+  fi
+fi
+
+if [ ! -x ${APPDIR}/${APPNAME} ] ; then
+  echo "${APPDIR}/${APPNAME}" is not executable
+  exit 1
+fi
+
+if [ -z "$PERSISTDIR" ] ; then
+  case $BOARD in
+    "mk5" | "mk6" | "mk6c" | "mq5" | "docker_x86_64")
+      PERSISTDIR="/mnt/rw/${APPNAME}"
+      ;;
+    *)
+      PERSISTDIR=`pwd`
+      ;;
+  esac
+fi
+
+if [ -z "${TCPDUMPKILL}" ] ; then
+  TCPDUMPKILL=0
+fi
+
+if [ "${EXTRA}" = "valgrind" ] ; then
+  WRAPPER="valgrind --log-file=${APPDIR}/valgrind_output.txt --tool=memcheck --leak-check=yes -v"
+  KILLCMD="valgrind.bin"
+fi
+
+if [ "${EXTRA}" = "strace" ] ; then
+  WRAPPER="strace -tt -f -o ${APPDIR}/strace_output.txt"
+  KILLCMD="./${APPNAME}"
+fi
+
+##############################################################################
+# Functions
+##############################################################################
+
+_pidof()
+{
+  case $BOARD in
+    "mq5")
+        PIDS=$(grep    "${1}" /proc/[1-9]*/cmdline 2>/dev/null | tr '\0' '\n' | grep cmdline | grep -v grep | grep -v "rc.${1}" | awk -F/ '{print $3}' | tr '\n' ' ')
+      ;;
+    *)
+      if [ -x "$(command -v pgrep)" ]; then
+        PIDS=$(pgrep -x "${1}")
+      elif [ -x "$(command -v pidof)" ]; then
+        PIDS=$(pidof   "${1}")
+      elif [ -x /bin/pidof ]; then
+        PIDS=$(pidof   "${1}")
+      else
+        PIDS=$(grep -a "${1}" /proc/[1-9]*/cmdline 2>/dev/null | tr '\0' ' '  |                grep -v grep | grep -v "rc.${1}" | awk -F/ '{print $3}' | tr '\n' ' ')
+      fi
+      ;;
+  esac
+  echo ${PIDS}
+}
+
+_killall()
+{
+  PIDS=$(_pidof ${1})
+  # 1st: Ask nicely
+  if [ -n "${PIDS}" ] ; then
+    for PID in "${PIDS}" ; do
+      name=`ps -p ${PID} -o comm= &> /dev/null`
+      [ -z "$name" ] && name=$PID
+      echo "Killing ${name}"
+      kill ${PID}
+    done
+  fi
+
+  # Give it a chance to exit
+  TIMEOUT=30
+  while [ ${TIMEOUT} != 0 ] ; do
+    PIDS=$(_pidof ${1})
+    if [ -n "${PIDS}" ] ; then
+      sleep 1;
+      TIMEOUT=$(( ${TIMEOUT}-1 ))
+    else
+      TIMEOUT=0
+    fi
+  done
+
+  # Still running? Insist!
+  PIDS=$(_pidof ${1})
+  if [ -n "${PIDS}" ] ; then
+    for PID in "${PIDS}" ; do
+      kill -9 ${PID}
+    done
+  fi
+}
+
+aerolink_cmd()
+{
+  # Exit quietly if there's no rc.aerolink file
+  if [ ! -f ${APPDIR}/aerolink/rc.aerolink ] ; then
+    return
+  fi
+
+  cd ${APPDIR}
+
+  # Create persistent storage directory
+  if [ ! -d ${PERSISTDIR}/aerolink/active ] ; then
+    echo "Creating persistent Aerolink configuration location (${PERSISTDIR}/aerolink/active)"
+    mkdir -p ${PERSISTDIR}/aerolink/active
+  fi
+
+  # Link to the persistent storage if present and local is missing
+  if [ -d ${PERSISTDIR}/aerolink/active ] ; then
+    if [ ! -d ${APPDIR}/aerolink/active ] ; then
+      echo "Using persistent Aerolink configuration (${PERSISTDIR}/aerolink/active)"
+      ln -fs ${PERSISTDIR}/aerolink/active ${APPDIR}/aerolink/active
+    fi
+  fi
+
+  case "$1" in
+    "" | "default")
+      # Handle mode for bare aerolink command with 'default' option
+      if [ "$1" = "default" ] && [ $# -gt 1 ] ; then
+        MODE=$2
+      fi
+      # Handle the case that previous aerolink setup was for a different mode by ensuring Aerolink is 'obu' or 'rsu' only
+      if [ -d ${APPDIR}/aerolink/active ] ; then
+        case $MODE in
+          "obu"|"evw")
+            if [ -e ${APPDIR}/aerolink/active/.rsu ] ; then
+              rm -rf ${APPDIR}/aerolink/active/*
+              rm -rf ${APPDIR}/aerolink/active/.rsu
+            fi
+            ;;
+          *)
+            if [ -e ${APPDIR}/aerolink/active/.obu ] ; then
+              rm -rf ${APPDIR}/aerolink/active/*
+              rm -rf ${APPDIR}/aerolink/active/.obu
+            fi
+            ;;
+        esac
+      fi
+      # Use the lack of a 'aerolink/active/state' directory as a proxy signal to automatically generate self signed *test* certificates
+      # Caveat-emptor! This isn't bulletproof as the previously generated test certificates may have expired
+      # If they have, one can manually regenerate the test certificates with: $0 aerolink clear
+      if [ ! -d ${APPDIR}/aerolink/active/state ] ; then
+        ./aerolink/rc.aerolink clear
+
+        case $MODE in
+          "obu"|"evw")
+            ./aerolink/rc.aerolink eu-demo-obu
+            touch ${APPDIR}/aerolink/active/.obu
+            ;;
+          *)
+            ./aerolink/rc.aerolink eu-demo-rsu
+            touch ${APPDIR}/aerolink/active/.rsu
+            ;;
+        esac
+      fi
+      ;;
+    *)
+      # Run bare aerolink command with other options
+      ./aerolink/rc.aerolink $*
+      ;;
+  esac
+
+  cd -
+}
+
+app_stop()
+{
+  run_hook pre-stop
+
+  # Send the kill signal to the app and wait for it to exit
+  _killall ${APPNAME}
+
+  if [ ${TCPDUMPKILL} -ne 0 ] ; then
+    # Cleanup any tcpdump instances that may have been missed
+    _killall tcpdump
+  fi
+
+  run_hook post-stop
+
+}
+
+app_start()
+{
+  # Make sure there are no rogue instances already running
+  app_stop
+
+  run_hook pre-start
+  # Ensure networking is up before continuing
+  case $BOARD in
+    "mq5")
+      LOOPBACK_IF=lo0
+      ;;
+    *)
+      LOOPBACK_IF=lo
+      ;;
+  esac
+  while [ "$(ifconfig ${LOOPBACK_IF} | grep UP)" = "" ]; do
+    echo "waiting for networking...";
+    sleep 1;
+  done
+  echo -ne "Network UP @ "; date
+
+  # Wait until the time changes to later than build date (i.e. GNSS script has set the time)
+  case $BOARD in
+    "mq5")
+      EPOCH=1514764800 # 1 Jan 2018
+      while [ $(date -tu) -lt $EPOCH ] ; do date; sleep 1; done
+      ;;
+    *)
+      EPOCH=$(stat -c%Z ${APPDIR}/${APPNAME})
+      while [ $(date +%s) -lt $EPOCH ] ; do echo -ne "Invalid date @ "; date; sleep 1; done
+      ;;
+  esac
+
+  echo -ne "Date Set @ "; date
+
+  case $BOARD in
+    "docker_x86_64")
+      # skip time-sync check (assume the docker host is properly synchronized).
+      echo -ne "Assume Docker Time Sync @ "; date
+      ;;
+    "vcu2")
+      if [ $( /usr/bin/which chronyd ) ] ; then
+        # assume 'chrony' is used if chronyd exists
+        while [ "$( ps | grep -w chronyd | grep -v grep )" = "" ] ; do echo -ne "Chrony not yet started @ "; date; sleep 1; done
+        # Check for system clock discipline
+        while : ; do $( chronyc sources | grep -q '^.\*' ); if [ $? -eq 0 ]; then break; else echo -ne "No time sync @ "; date; sleep 1; fi; done
+        chronyc sources | grep '^.\*'
+        echo -ne "Chrony Time Sync @ "; date
+      fi
+      ;;
+    *)
+      if [ $( /usr/bin/which chronyd ) ] ; then
+        # assume 'chrony' is used if chronyd exists
+        while [ "$( pgrep -x chronyd )" = "" ] ; do echo -ne "Chrony not yet started @ "; date; sleep 1; done
+        # Check for system clock discipline
+        while : ; do $( chronyc sources | grep -q '^.\*' ); if [ $? -eq 0 ]; then break; else echo -ne "No time sync @ "; date; sleep 1; fi; done
+        chronyc sources | grep '^.\*'
+        echo -ne "Chrony Time Sync @ "; date
+      fi
+      ;;
+  esac
+
+  case $BOARD in
+    "mq5")
+      # Start mq if not already running
+      PID=$(_pidof mq)
+      if [ -z "${PID}" ] ; then
+        mq
+      fi
+      echo -ne "MQ5 services @ "; date
+      ;;
+    "mk6" | "mk6c")
+      systemctl is-active --quiet cv2x.service || systemctl restart cv2x.service
+      sleep 1
+      cv2x-config --stop-v2x-mode
+      cv2x-config --update-config-file /etc/v2x.xml;
+      cv2x-config --start-v2x-mode
+      sleep 1
+      case $BOARD in
+        "mk6c")
+          CV2X_IP_IF=rmnet_data0
+          CV2X_NONIP_IF=rmnet_data1
+          ;;
+        *)
+          CV2X_IP_IF=rmnet_data15
+          CV2X_NONIP_IF=rmnet_data16
+          ;;
+      esac
+      # Check C-V2X network interfaces
+      while ! ifconfig ${CV2X_IP_IF} | grep -q UP || ! ifconfig ${CV2X_NONIP_IF} | grep -q UP; do
+        echo "waiting for C-V2X interfaces...";
+        sleep 1;
+        systemctl restart cv2x.service
+      done
+      echo -ne "C-V2X Interfaces UP @ "; date
+      ;;
+    *)
+      ;;
+  esac
+
+  # Prepare security
+  aerolink_cmd default ${MODE}
+  echo -ne "Security config @ "; date
+
+  cd ${APPDIR}
+
+    # Run application
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:./lib ${WRAPPER} ./${APPNAME} \
+      -f ${MODE}.cfg \
+      -c ${MODE}.conf \
+      -C ${PERSISTDIR}/${MODE}.conf \
+      -a &
+    disown -h -a
+    echo -ne "Application running @ "; date
+
+    # Sleep a bit to make sure ${LOG}/current/stderr is in place when returning
+    if [ -z "${WRAPPER}" ] ; then
+      sleep 2
+    else
+      # When WRAPPER is defined, sleep longer
+      sleep 5
+    fi
+  cd -
+
+  run_hook post-start
+}
+
+
+##############################################################################
+# main
+##############################################################################
+
+PATH=/opt/cohda/bin:$PATH
+
+case $1 in
+  "start")
+    app_start
+    ;;
+  "stop")
+    app_stop
+    ;;
+  "restart")
+    app_stop
+    sleep 1
+    app_start
+    ;;
+  "aerolink")
+    shift # drop the 'aerolink' command, pass the remaining argument(s)
+    aerolink_cmd $*
+    ;;
+  *)
+    echo "Usage: $0 start|stop|restart <config-name>"
+    echo "       $0 aerolink [cmd]"
+    ;;
+esac
+
+exit 0

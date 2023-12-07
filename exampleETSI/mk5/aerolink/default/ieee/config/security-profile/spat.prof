@@ -1,0 +1,65 @@
+### Configuration for SPaT (Signal, Phase, and Timing from RSU) security profile.
+
+psid  0x82
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                    1000    # SPaT profile requires 1 sec.
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # SPaT profile requires true
+
+include_expiry_time                    false    # SPaT profile requires false
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                          0    # arbitrary, not used
+
+include_generation_location             true    # SPaT profile requires true
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # SPaT profile requires false
+
+check_relevance_past_freshness          true    # SPaT profile requires true
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance        60000000    # SPaT profile requires 1 min.
+
+check_relevance_future_freshness        true    # SPaT profile requires true
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance      30000000    # SPaT profile requires 30 sec.
+
+check_relevance_expiry_time            false    # SPaT profile requires false
+
+check_relevance_generation_location     true    # SPaT profile requires true
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                  1000    # SPaT profile requires 1000 m.
+
+check_relevance_certificate_expiry      true    # SPaT profile requires true
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location   true    # SPaT profile requires true
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                              false    # SPaT profile requires false
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance                      0    # arbitrary, not used
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                            none    # SPaT profile requires none

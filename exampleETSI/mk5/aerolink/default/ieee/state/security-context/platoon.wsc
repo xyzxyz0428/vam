@@ -1,0 +1,8 @@
+lcms = [
+    {
+          lcm_type                            application
+          lcm_name                            wsmLcm
+          acf_prefix                          WSM
+          use_scms                            false
+    }
+]

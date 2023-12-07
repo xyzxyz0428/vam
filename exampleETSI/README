@@ -1,0 +1,104 @@
+ETSI OBU demo application
+
+Getting started
+
+MKx - Target environment
+
+# Make the application
+cd ~/mk5/stack/apps/exampleETSI && make mk5-clean mk5-tarball
+# Transfer package to MK5
+scp exampleETSI-mk5.tgz user@<MK5IPv4>:/mnt/ubi
+# Unpackage on MK5
+tar -xvzf ./exampleETSI-mk5.tgz
+# Check/configure the application
+cd ./exampleETSI
+less obu.cfg
+less obu.conf
+# Run the application
+./rc.exampleETSI stop obu
+./rc.exampleETSI start obu
+
+Host VM - Simulation environment
+
+# Load kernel modules
+cd ~/x86 && ./load
+# Create log area
+sudo mkdir -p /mnt/ubi/log
+# Start gpsfake
+gpsfake -p -o -G -c 0.1 ~/x86/NMEA.txt 1>/dev/null &
+# Start Wireshark
+sudo wireshark -i any -k -f "udp port 0x88b5" &
+# Make the application
+cd ~/x86/stack/apps/exampleETSI && make clean && make
+# Run the application
+cd ./`uname -m`
+sudo ./rc.exampleETSI stop obu
+sudo ./rc.exampleETSI start obu
+
+# Note: If you desire the CAN bus can be exercised by using vcan0 and Linux CAN utils.
+
+Security
+
+In order to utilise secured messaging, some appropriate certificates need to
+be pre-installed or the device needs to be configured for automatic downloading
+of AT certificates.
+
+Demo certificates:
+The rc.aerolink script can support creation of demonstration certificates,
+using a provided 'demo' root certificate.
+
+exampleETSI$ ./aerolink/rc.aerolink clear
+exampleETSI$ ./aerolink/rc.aerolink eu-demo-obu
+exampleETSI$ ./aerolink/rc.aerolink check
+
+The 'eu-demo-obu' step uses the local demo root certificate and Aerolink tools to
+create certificates for Aerolink to use. The 'clear' step simply removes
+any configuration for a previous set-up, the 'check' step displays some useful
+information on the Aerolink configuration, the CA certificates loaded and the
+contents of the first AT certificate.
+
+PKI download of certificate:
+The rc.aerolink script can prepare the device for registration at a PKI and
+then configure the security system with the necessary root CAs and distribution
+centre addresses.
+
+exampleETSI$ ./aerolink/rc.aerolink clear
+exampleETSI$ ./aerolink/rc.aerolink eu-empty-setup
+exampleETSI$ ./aerolink/rc.aerolink eu-pki-ec-req <canonicalId>
+exampleETSI$ ./aerolink/rc.aerolink eu-pki-ec-resp <location of TLM/ECTL/CRL/CTL>
+exampleETSI$ ./aerolink/rc.aerolink check
+
+These operations are described in the "Cohda PKI How To" documents on Cohda
+Support site, there steps are slightly different for each PKI provider.
+
+Pre-built certificate bundle:
+A PKI can provide a pre-built bundle that can be imported to the security system.
+
+exampleETSI$ ./aerolink/rc.aerolink clear
+exampleETSI$ ./aerolink/rc.aerolink eu-etsi-load <location of certs/keys> <number certs per set>
+exampleETSI$ ./aerolink/rc.aerolink check
+
+The 'eu-etsi-load' step takes the provided certificates generated from the
+escrypt client software tool and 'translates' the certificates and keys into
+a format used by Aerolink, allowing the private keys to be imported. The
+ability to fetch public keys from the HSM and use those to create certificates
+is not automated yet.
+
+Once the appropriate CA certificates are installed and the AT certificates are
+available to the security system in the correct format, the security system
+within the application can be enabled with "ItsGnSecurity = 1" in the 'obu.conf'
+(or relevant .conf file used by the application.)
+
+NOTE: Other certificate bundles are also supported, see 'rc.aerolink help'
+
+Toll Database
+
+The EU toll database can be loaded by converting the tool database XML file
+to a custom format and configuring the application to locate the custom DB file.
+
+./tools/eu-toll-pack.py -d ./PZDB_REL_20210426112800_20210426225123.xml -o /mnt/ubi/TollDB.bin
+
+In configuration file add: "ItsFacilitiesTollDatabaseQuery = 1" to enable and 
+"ItsFacilitiesTollDatabaseFile = /mnt/ubi/TollDB.bin" to define location
+
+See Cohda Support for more information.

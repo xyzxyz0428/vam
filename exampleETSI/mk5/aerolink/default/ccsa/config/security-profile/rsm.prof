@@ -1,0 +1,66 @@
+### Configuration for RSM (Roadside Message from RSU) security profile per
+### Chinese specification.
+
+psid  0x0e27
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                       0    # RSM profile requires a cert
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # not specified
+
+include_expiry_time                    false    # not specified
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                          0    # arbitrary, not used
+
+include_generation_location            false    # not specified
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # not specified
+
+check_relevance_past_freshness         false    # not specified
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance               0    # arbitrary, not used
+
+check_relevance_future_freshness       false    # not specified
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance             0    # arbitrary, not used
+
+check_relevance_expiry_time            false    # not specified
+
+check_relevance_generation_location    false    # not specified
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                     0    # arbitrary, not used
+
+check_relevance_certificate_expiry      true    # not specified
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location  false    # not specified
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                              false    # no revocation at this time
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance                      0    # arbitrary, not used
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                            none    # not specified

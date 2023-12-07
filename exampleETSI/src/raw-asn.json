@@ -1,0 +1,442 @@
+{
+    "RAW_AccelerationConfidence_ID": {
+        "1": "pointOneMeterPerSecSquared",
+        "101": "outOfRange",
+        "102": "unavailable"
+    },
+    "RAW_AccelerationConfidence_Limit": {
+        "0": "Min",
+        "102": "Max"
+    },
+    "RAW_ActionDeltaTime_ID": {
+        "0": "zero",
+        "1": "hundredMs",
+        "2": "twoHundredMs",
+        "127": "unavailable"
+    },
+    "RAW_ActionDeltaTime_Limit": {
+        "0": "Min",
+        "127": "Max"
+    },
+    "RAW_AltitudeConfidence_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_AltitudeValue_ID": {
+        "0": "referenceEllipsoidSurface",
+        "1": "oneCentimeter",
+        "800001": "unavailable"
+    },
+    "RAW_AltitudeValue_Limit": {
+        "-100000": "Min",
+        "800001": "Max"
+    },
+    "RAW_ClusterBreakupReason_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_ClusterCardinalitySize_ID": {
+        "0": "unavailable",
+        "1": "onlyLeader"
+    },
+    "RAW_ClusterCardinalitySize_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_ClusterId_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_ClusterLeaveReason_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_CurvatureCalculationMode_Limit": {
+        "0": "Min",
+        "2": "Max"
+    },
+    "RAW_CurvatureConfidence_Limit": {
+        "0": "Min",
+        "7": "Max"
+    },
+    "RAW_CurvatureValue_ID": {
+        "0": "straight",
+        "1023": "unavailable"
+    },
+    "RAW_CurvatureValue_Limit": {
+        "-1023": "Min",
+        "1023": "Max"
+    },
+    "RAW_DeltaAltitude_ID": {
+        "-1": "oneCentimeterDown",
+        "1": "oneCentimeterUp",
+        "12800": "unavailable"
+    },
+    "RAW_DeltaAltitude_Limit": {
+        "-12700": "Min",
+        "12800": "Max"
+    },
+    "RAW_DeltaLatitude_ID": {
+        "-10": "oneMicrodegreeSouth",
+        "10": "oneMicrodegreeNorth",
+        "131072": "unavailable"
+    },
+    "RAW_DeltaLatitude_Limit": {
+        "-131071": "Min",
+        "131072": "Max"
+    },
+    "RAW_DeltaLongitude_ID": {
+        "-10": "oneMicrodegreeWest",
+        "10": "oneMicrodegreeEast",
+        "131072": "unavailable"
+    },
+    "RAW_DeltaLongitude_Limit": {
+        "-131071": "Min",
+        "131072": "Max"
+    },
+    "RAW_GenerationDeltaTime_ID": {
+        "1": "oneMilliSec"
+    },
+    "RAW_GenerationDeltaTime_Limit": {
+        "0": "Min",
+        "65535": "Max"
+    },
+    "RAW_HeadingConfidence_ID": {
+        "1": "equalOrWithinZeroPointOneDegree",
+        "10": "equalOrWithinOneDegree",
+        "126": "outOfRange",
+        "127": "unavailable"
+    },
+    "RAW_HeadingConfidence_Limit": {
+        "1": "Min",
+        "127": "Max"
+    },
+    "RAW_HeadingValue_ID": {
+        "0": "wgs84North",
+        "900": "wgs84East",
+        "1800": "wgs84South",
+        "2700": "wgs84West",
+        "3601": "unavailable"
+    },
+    "RAW_HeadingValue_Limit": {
+        "0": "Min",
+        "3601": "Max"
+    },
+    "RAW_IntersectionID_Limit": {
+        "0": "Min",
+        "65535": "Max"
+    },
+    "RAW_ItsPduHeaderMessageID_ID": {
+        "1": "denm",
+        "2": "cam",
+        "3": "poi",
+        "4": "spatem",
+        "5": "mapem",
+        "6": "ivim",
+        "7": "ev_rsr",
+        "8": "tistpgtransaction",
+        "9": "srem",
+        "10": "ssem",
+        "11": "evcsn",
+        "12": "saem",
+        "13": "rtcmem",
+        "14": "vam"
+    },
+    "RAW_ItsPduHeaderMessageID_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_ItsPduHeader_ProtocolVersion_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_LaneID_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_LanePosition_ID": {
+        "-1": "offTheRoad",
+        "0": "hardShoulder",
+        "1": "outermostDrivingLane",
+        "2": "secondLaneFromOutside"
+    },
+    "RAW_LanePosition_Limit": {
+        "-1": "Min",
+        "14": "Max"
+    },
+    "RAW_LateralAccelerationValue_ID": {
+        "-1": "pointOneMeterPerSecSquaredToRight",
+        "1": "pointOneMeterPerSecSquaredToLeft",
+        "161": "unavailable"
+    },
+    "RAW_LateralAccelerationValue_Limit": {
+        "-160": "Min",
+        "161": "Max"
+    },
+    "RAW_Latitude_ID": {
+        "-10": "oneMicrodegreeSouth",
+        "10": "oneMicrodegreeNorth",
+        "900000001": "unavailable"
+    },
+    "RAW_Latitude_Limit": {
+        "-900000000": "Min",
+        "900000001": "Max"
+    },
+    "RAW_Longitude_ID": {
+        "-10": "oneMicrodegreeWest",
+        "10": "oneMicrodegreeEast",
+        "1800000001": "unavailable"
+    },
+    "RAW_Longitude_Limit": {
+        "-1800000000": "Min",
+        "1800000001": "Max"
+    },
+    "RAW_LongitudinalAccelerationValue_ID": {
+        "-1": "pointOneMeterPerSecSquaredBackward",
+        "1": "pointOneMeterPerSecSquaredForward",
+        "161": "unavailable"
+    },
+    "RAW_LongitudinalAccelerationValue_Limit": {
+        "-160": "Min",
+        "161": "Max"
+    },
+    "RAW_OffRoadLanePosition_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_Offset_B10_Limit": {
+        "-512": "Min",
+        "511": "Max"
+    },
+    "RAW_Offset_B11_Limit": {
+        "-1024": "Min",
+        "1023": "Max"
+    },
+    "RAW_Offset_B12_Limit": {
+        "-2048": "Min",
+        "2047": "Max"
+    },
+    "RAW_Offset_B13_Limit": {
+        "-4096": "Min",
+        "4095": "Max"
+    },
+    "RAW_Offset_B14_Limit": {
+        "-8192": "Min",
+        "8191": "Max"
+    },
+    "RAW_Offset_B16_Limit": {
+        "-32768": "Min",
+        "32767": "Max"
+    },
+    "RAW_PathDeltaTime_ID": {
+        "1": "tenMilliSecondsInPast"
+    },
+    "RAW_PathDeltaTime_Limit": {
+        "1": "Min",
+        "65535": "Max"
+    },
+    "RAW_PathHistory_SeqSize": {
+        "0": "Min",
+        "40": "Max"
+    },
+    "RAW_PolyPointList_SeqSize": {
+        "3": "Min",
+        "16": "Max"
+    },
+    "RAW_Radius_ID": {
+        "1": "zeroPointOneMeter",
+        "10": "oneMeter"
+    },
+    "RAW_Radius_Limit": {
+        "0": "Min",
+        "10000": "Max"
+    },
+    "RAW_RegionId": {
+        "0": "noRegion",
+        "1": "addGrpA",
+        "2": "addGrpB",
+        "3": "addGrpC"
+    },
+    "RAW_RegionId_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_RoadRegulatorID_Limit": {
+        "0": "Min",
+        "65535": "Max"
+    },
+    "RAW_SemiAxisLength_ID": {
+        "1": "oneCentimeter",
+        "4094": "outOfRange",
+        "4095": "unavailable"
+    },
+    "RAW_SemiAxisLength_Limit": {
+        "0": "Min",
+        "4095": "Max"
+    },
+    "RAW_SemiRangeLength_ID": {
+        "1": "zeroPointOneMeter",
+        "10": "oneMeter"
+    },
+    "RAW_SemiRangeLength_Limit": {
+        "0": "Min",
+        "10000": "Max"
+    },
+    "RAW_SequenceOfTrajectoryInterceptionIndication_SeqSize": {
+        "1": "Min",
+        "8": "Max"
+    },
+    "RAW_SequenceOfVruSafeDistanceIndication_SeqSize": {
+        "1": "Min",
+        "8": "Max"
+    },
+    "RAW_SpeedConfidence_ID": {
+        "1": "equalOrWithinOneCentimeterPerSec",
+        "100": "equalOrWithinOneMeterPerSec",
+        "126": "outOfRange",
+        "127": "unavailable"
+    },
+    "RAW_SpeedConfidence_Limit": {
+        "1": "Min",
+        "127": "Max"
+    },
+    "RAW_SpeedValue_ID": {
+        "0": "standstill",
+        "1": "oneCentimeterPerSec",
+        "16383": "unavailable"
+    },
+    "RAW_SpeedValue_Limit": {
+        "0": "Min",
+        "16383": "Max"
+    },
+    "RAW_StabilityLossProbability_ID": {
+        "0": "zero",
+        "1": "twoPercent",
+        "2": "fourPercent",
+        "63": "unavailable"
+    },
+    "RAW_StabilityLossProbability_Limit": {
+        "0": "Min",
+        "63": "Max"
+    },
+    "RAW_StationID_Limit": {
+        "0": "Min",
+        "4294967295": "Max"
+    },
+    "RAW_StationType_ID": {
+        "0": "unknown",
+        "1": "pedestrian",
+        "2": "cyclist",
+        "3": "moped",
+        "4": "motorcycle",
+        "5": "passengerCar",
+        "6": "bus",
+        "7": "lightTruck",
+        "8": "heavyTruck",
+        "9": "trailer",
+        "10": "specialVehicles",
+        "11": "tram",
+        "12": "lightVruVehicle",
+        "13": "animal",
+        "15": "roadSideUnit"
+    },
+    "RAW_StationType_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_TrajectoryInterceptionConfidence_ID": {
+        "0": "lessthan50percent",
+        "1": "between50and70Percent",
+        "2": "between70and90Percent",
+        "3": "above90Percent"
+    },
+    "RAW_TrajectoryInterceptionConfidence_Limit": {
+        "0": "Min",
+        "3": "Max"
+    },
+    "RAW_TrajectoryInterceptionProbability_ID": {
+        "0": "zero",
+        "1": "twoPercent",
+        "2": "fourPercent",
+        "50": "oneHundredPercent",
+        "63": "unavailable"
+    },
+    "RAW_TrajectoryInterceptionProbability_Limit": {
+        "0": "Min",
+        "63": "Max"
+    },
+    "RAW_VerticalAccelerationValue_ID": {
+        "-1": "pointOneMeterPerSecSquaredDown",
+        "1": "pointOneMeterPerSecSquaredUp",
+        "161": "unavailable"
+    },
+    "RAW_VerticalAccelerationValue_Limit": {
+        "-160": "Min",
+        "161": "Max"
+    },
+    "RAW_VruClusterOpTimestamp_Limit": {
+        "1": "Min",
+        "255": "Max"
+    },
+    "RAW_VruDeviceUsage_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_VruEnvironment_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_VruMovementControl_Limit": {
+        "0": "Min",
+        "255": "Max"
+    },
+    "RAW_VruProfile_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_VruSizeClass_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_VruSubProfileAnimal_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_VruSubProfileBicyclist_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_VruSubProfileMotorcyclist_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_VruSubProfilePedestrian_Limit": {
+        "0": "Min",
+        "15": "Max"
+    },
+    "RAW_WGS84AngleValue_ID": {
+        "0": "wgs84North",
+        "900": "wgs84East",
+        "1800": "wgs84South",
+        "2700": "wgs84West",
+        "3601": "unavailable"
+    },
+    "RAW_WGS84AngleValue_Limit": {
+        "0": "Min",
+        "3601": "Max"
+    },
+    "RAW_YawRateConfidence_Limit": {
+        "0": "Min",
+        "8": "Max"
+    },
+    "RAW_YawRateValue_ID": {
+        "-1": "degSec_000_01ToRight",
+        "0": "straight",
+        "1": "degSec_000_01ToLeft",
+        "32767": "unavailable"
+    },
+    "RAW_YawRateValue_Limit": {
+        "-32766": "Min",
+        "32767": "Max"
+    }
+}

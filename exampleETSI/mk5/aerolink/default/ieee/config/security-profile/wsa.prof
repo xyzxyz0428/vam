@@ -1,0 +1,67 @@
+### Configuration for WSA (Wave Service Advertisement from RSU) security profile
+### per IEEE 1609.3.
+
+psid  0x87
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                     495    # WSA profile requires .495 sec.
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # WSA profile requires true
+
+include_expiry_time                     true    # WSA profile requires true
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                      30000    # WSA profile requires 30 sec.
+
+include_generation_location             true    # WSA profile requires true
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # WSA profile requires false
+
+check_relevance_past_freshness         false    # WSA profile requires false
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance               0    # arbitrary, not used
+
+check_relevance_future_freshness        true    # WSA profile requires true
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance      60000000    # WSA profile requires 60 sec.
+
+check_relevance_expiry_time             true    # WSA profile requires true
+
+check_relevance_generation_location    false    # WSA profile requires false
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                     0    # arbitrary, not used
+
+check_relevance_certificate_expiry      true    # WSA profile requires true
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location   true    # WSA profile requires true
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                              false    # WSA profile requires false
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance                      0    # arbitrary, not used
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                     out_of_band    # WSA profile requires
+                                                # out_of_band

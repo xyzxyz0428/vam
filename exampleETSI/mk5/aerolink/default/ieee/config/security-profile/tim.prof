@@ -1,0 +1,65 @@
+### Configuration for TIM (Traveler Information Message from RSU) security profile.
+
+psid  0x83
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                       0    # TIM profile requires a cert
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # TIM profile requires true
+
+include_expiry_time                     true    # TIM profile requires true
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                   14400000    # TIM profile requires 240 min.
+
+include_generation_location            false    # TIM profile requires false
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # TIM profile requires false
+
+check_relevance_past_freshness         false    # TIM profile requires false
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance               0    # arbitrary, not used
+
+check_relevance_future_freshness        true    # TIM profile requires true
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance      30000000    # TIM profile requires 30 sec.
+
+check_relevance_expiry_time             true    # TIM profile requires true
+
+check_relevance_generation_location    false    # TIM profile requires false
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                     0    # arbitrary, not used
+
+check_relevance_certificate_expiry      true    # TIM profile requires true
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location  false    # TIM profile requires false
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                              false    # TIM profile requires false
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance                      0    # arbitrary, not used
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                            none    # TIM profile requires none

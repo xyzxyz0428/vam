@@ -1,0 +1,65 @@
+### Configuration for data log transfer (from OBU) security profile.
+
+psid  0x204089
+
+# Interval, in ms, at which full certificates are included in signed SPDUs.
+certificate_interval                       0    # Data log profile requires a cert
+
+##############################################################################
+### Set which fields are included in the security headers.
+
+include_generation_time                 true    # Data log profile requires true
+
+include_expiry_time                     true    # Data log profile requires true
+
+    # SPDU expiry time is set to generation time plus this value, in ms.
+    spdu_lifetime                      60000    # Data log profile requires 60 sec.
+
+include_generation_location            false    # Data log profile requires false
+
+##############################################################################
+### Set which relevance checks are executed.
+
+check_replays                          false    # Data log profile requires false
+
+check_relevance_past_freshness         false    # Data log profile requires false
+
+    # Maximum time in the past, in us, to accept an SPDU as valid.
+    past_freshness_tolerance               0    # arbitrary, not used
+
+check_relevance_future_freshness        true    # Data log profile requires true
+
+    # Maximum time in the future, in us, to accept an SPDU as valid.
+    future_freshness_tolerance      30000000    # Data log profile requires 30 sec.
+
+check_relevance_expiry_time             true    # Data log profile requires true
+
+check_relevance_generation_location    false    # Data log profile requires false
+
+    # Maximum distance from receiver, in meters, to accept an SPDU as valid.
+    distance_tolerance                     0    # arbitrary, not used
+
+check_relevance_certificate_expiry      true    # Data log profile requires true
+
+##############################################################################
+### Set which consistency checks are executed.
+
+check_consistency_generation_location  false    # Data log profile requires false
+
+##############################################################################
+### Whether or not to perform CRL checks for this PSID
+
+check_crl                               true    # Data log profile requires true
+
+##############################################################################
+### Set how long SPDUs are valid, in seconds, after the last CRL expires.
+
+overdue_crl_tolerance               94670856    # 3 years
+
+##############################################################################
+### Peer To Peer Certificate Distribution or Certificate Learning or
+### Unknown Certificate Request
+
+# Set if and how certificates are requested and provided if unknown to the
+# receiver.  Choices are none, inline, out_of_band.
+p2pcd_flavor                            none    # Data log profile requires none

@@ -1,0 +1,8 @@
+lcms = [
+     {
+          lcm_type                            pseudonym
+          lcm_name                            bsmLcm
+          acf_prefix                          psid-0x20
+          use_scms                            false
+     }
+]

@@ -1,0 +1,19 @@
+lcms = [
+    {
+        lcm_type                        pseudonym
+        lcm_name                        demoLcm
+        acf_prefix                      its
+        use_scms                        false
+
+        ### End Entity required fields
+        enrollment_config_name          enroll1                 # The matching enrollment definition name
+        app_permissions                 "0x24:b:0x01-00-00+0x25:b:0x01-90-5a-21"  # Normal vehicle with C2C DENM codes
+        curve                           NISTP256                # NISTP256 or BRAINPOOLP256
+        num_simultaneous_certs          20
+        num_validity_periods            10
+
+        ### End Entity optional fields
+        duration                        168h                    # Default duration is 1 week
+    }
+]
+
