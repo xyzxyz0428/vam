@@ -85,11 +85,11 @@ gpspipe -r
 
 5. shutdown.
 ```
-/mnt/rw/absolutETSI/rc.exampleETSI stop
+/mnt/rw/absolutETSI/rc.exampleETSI stop raw
 ```
 
-### Run UDP server script (in progress)
+### Run UDP server script
 - This file involves UDP server to exact data from OBU units. 
-- This file involves a Python application using PyQt5 to display and dynamically update a real-time map in a GUI window.
+- <code>/vam_server/dynamic_map_test/map_dynamic_update.py</code> includes ython application using PyQt5 to display and dynamically update a real-time map in a GUI window.
 
 
