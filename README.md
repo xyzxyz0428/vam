@@ -26,13 +26,13 @@ cd /mnt/hgfs
 
 The original SDK provides a VM with the EclipseIDE as a development environment.
 
-#### File Prepatation for RSU
+#### File Preparation for RSU
 - VAM message structure is defined in <code>/RSU_mk5/RAW.asn1</code>
 - Custom payload is generated in <code>/RSU_mk5/rawits.c</code> with header file <code>/RSU_mk5/rawits.h</code>. The custom payload is PER-encoded data generated from the RAW.asn1 file. This is achieved by using the ASN1C compiler to generate C code from ASN.1, which implements the encoders and decoders and provides the structure of the message to populate. Apart from this, this file includes a UDP server to receive externe data from file <code>/vam_client/Windows/VAMinput.py</code>
 
 please overwrite these three files under home/duser/mk5/stack/apps/exampleETSI/src. 
 
-#### File Prepatation for RSU
+#### File Preparation for OBU
 - VAM message structure is defined in <code>/OBU_mk5/RAW.asn1</code>, Both units employ identical VAM structures for both decoding and encoding.
 - VAM message can be received in <code>/OBU_mk5/rawits.c</code> with header file <code>/RSU_mk5/rawits.h</code>. This file includes a UDP client to send received data out for further analysis and visualisation.
 
@@ -64,12 +64,13 @@ gcc -o udp_server udp_server.c -lws2_32
 
 ### Start Cohda 
 
-1. SSH or PuTTY 
-mk5: fe80::6e5:48ff:fe20:5a88%<interface>` 
-mk6: fe80::6e5:48ff:fe50:01A0%<interface>` 
+1. SSH or PuTTY
+
+mk5: fe80::6e5:48ff:fe20:5a88%<interface>
+mk6: fe80::6e5:48ff:fe50:01A0%<interface> 
 interface can be checked with ipconfig in Windows and ifconfig in Linux
 
-2. unzipping uploaded exampleETSI-mk5-Exported.tgz
+3. unzipping uploaded exampleETSI-mk5-Exported.tgz
 ```
 sudo tar xzfv /tmp/exampleETSI-mk5-Exported.tgz -C /mnt/rw
 ```
@@ -90,6 +91,6 @@ gpspipe -r
 
 ### Run UDP Server Script
 - This file involves UDP server to exact data from OBU units. 
-- <code>/vam_server/dynamic_map_test/map_dynamic_update.py</code> includes ython application using PyQt5 to display and dynamically update a real-time map in a GUI window.
+- <code>/vam_server/dynamic_map_test/map_dynamic_update.py</code> includes python application using PyQt5 to display and dynamically update a real-time map in a GUI window.
 
 
