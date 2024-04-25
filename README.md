@@ -3,7 +3,7 @@ This package is specifically designed to facilitate V2X (Vehicle-to-Everything) 
 
 ## script preparation
 ### CohdaSDK
-The Latest SDK containing both MK5 (DSRC), MK6C (C-V2X), MK6 (DSRC + C-V2X) and x64 software is found in [Releases_SDK_and_MKx_2023->SDK](https://cohdawireless.account.box.com/login?redirect_url=%2Ffolder%2F236504075293). You could find official tutorials for [Installing and configuring the MKx SDK in VM ] (https://support.cohdawireless.com/hc/en-us/articles/202668864-Installing-and-configuring-the-MKx-SDK) and [Building MKx Image using SDK and adding Libraries] (https://support.cohdawireless.com/hc/en-us/articles/115002590143-Building-MKx-Image-using-SDK-and-adding-Libraries)
+The Latest SDK containing both MK5 (DSRC), MK6C (C-V2X), MK6 (DSRC + C-V2X) and x64 software is found in [Releases_SDK_and_MKx_2023->SDK](https://cohdawireless.account.box.com/login?redirect_url=%2Ffolder%2F236504075293). You could find official tutorials for [Installing and configuring the MKx SDK in VM](https://support.cohdawireless.com/hc/en-us/articles/202668864-Installing-and-configuring-the-MKx-SDK) and [Building MKx Image using SDK and adding Libraries](https://support.cohdawireless.com/hc/en-us/articles/115002590143-Building-MKx-Image-using-SDK-and-adding-Libraries)
 
 ### [Workstation player](workstation player)
 #### Share Folder
