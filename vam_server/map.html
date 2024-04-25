@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.log("An error occurred: " + message);
+        };
+    </script>
+    <style>
+        /* Ensure the HTML and body take up the full height of the viewport */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        /* Set the map container to take up all available height in the body */
+        #mapid {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapid"</div>
+    <script>
+        var mymap = L.map('mapid').setView([51.2638, 13.7205], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mymap);
+
+        var marker = L.marker([51.2638, 13.7205]).addTo(mymap);
+
+        function updateMarker(lat, lon) {
+            try {
+                marker.setLatLng([lat, lon]); // Update the marker's position
+                //mymap.panTo([lat, lon]); // Center the map on the new position
+                return "Updated successfully";} 
+            catch (error) {
+                console.error("Error updating marker:", error);
+                return "Error: " + error.message; // Return error message to Python
+            }
+        }
+    </script>
+</body>
+</html>
