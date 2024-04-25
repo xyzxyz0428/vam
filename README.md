@@ -1,11 +1,11 @@
-# VAM C-ITS for Priobike
+# VAM C-ITS for PrioBike
 This package is specifically designed to facilitate V2X (Vehicle-to-Everything) message communication using the Cohda Wireless SDK. The data flow process within this system is structured as follow. The stability of data transmission requires additional validation.
 
-## script preparation
-### CohdaSDK
+## Scripts Preparation
+### Cohda SDK
 The Latest SDK containing both MK5 (DSRC), MK6C (C-V2X), MK6 (DSRC + C-V2X) and x64 software is found in [Releases_SDK_and_MKx_2023->SDK](https://cohdawireless.account.box.com/login?redirect_url=%2Ffolder%2F236504075293). You could find official tutorials for [Installing and configuring the MKx SDK in VM](https://support.cohdawireless.com/hc/en-us/articles/202668864-Installing-and-configuring-the-MKx-SDK) and [Building MKx Image using SDK and adding Libraries](https://support.cohdawireless.com/hc/en-us/articles/115002590143-Building-MKx-Image-using-SDK-and-adding-Libraries)
 
-### [Workstation player](workstation player)
+### [Workstation player](https://www.vmware.com/products/workstation-player/workstation-player-evaluation.html)
 #### Share Folder
 
 - set the share folder path on workstation player: VM properties-> options-> sharefolder
@@ -18,7 +18,7 @@ sudo vmhgfs-fuse .host:/ /mnt/hgfs  -o nonempty -o allow_other
 ```
 cd /mnt/hgfs
 ```
-#### Network configuration
+#### Network Configuration
 - networkadapter1: connected NAT
 - networkcadapter2: connected bridge: host adapter: realtake USB gbE famliy controller
 
@@ -26,13 +26,13 @@ cd /mnt/hgfs
 
 The original SDK provides a VM with the EclipseIDE as a development environment.
 
-#### File prepatation for RSU
+#### File Prepatation for RSU
 - VAM message structure is defined in <code>/RSU_mk5/RAW.asn1</code>
 - Custom payload is generated in <code>/RSU_mk5/rawits.c</code> with header file <code>/RSU_mk5/rawits.h</code>. The custom payload is PER-encoded data generated from the RAW.asn1 file. This is achieved by using the ASN1C compiler to generate C code from ASN.1, which implements the encoders and decoders and provides the structure of the message to populate. Apart from this, this file includes a UDP server to receive externe data from file <code>/vam_client/Windows/VAMinput.py</code>
 
 please overwrite these three files under home/duser/mk5/stack/apps/exampleETSI/src. 
 
-#### File prepatation for RSU
+#### File Prepatation for RSU
 - VAM message structure is defined in <code>/OBU_mk5/RAW.asn1</code>, Both units employ identical VAM structures for both decoding and encoding.
 - VAM message can be received in <code>/OBU_mk5/rawits.c</code> with header file <code>/RSU_mk5/rawits.h</code>. This file includes a UDP client to send received data out for further analysis and visualisation.
 
@@ -62,7 +62,7 @@ user name & PW: user
 gcc -o udp_server udp_server.c -lws2_32
 ```
 
-### start Cohda 
+### Start Cohda 
 
 1. SSH or PuTTY 
 mk5: fe80::6e5:48ff:fe20:5a88%<interface>` 
@@ -88,7 +88,7 @@ gpspipe -r
 /mnt/rw/absolutETSI/rc.exampleETSI stop raw
 ```
 
-### Run UDP server script
+### Run UDP Server Script
 - This file involves UDP server to exact data from OBU units. 
 - <code>/vam_server/dynamic_map_test/map_dynamic_update.py</code> includes ython application using PyQt5 to display and dynamically update a real-time map in a GUI window.
 
