@@ -47,7 +47,7 @@ make mk5-tarball
 ```
 you can use [winscp](https://winscp.net/eng/download.php) or command
 ``` 
- `scp -6 exampleETSI-mk5-Exported.tgz user@\[<ip%interface>\]:/tmp` 
+scp -6 exampleETSI-mk5-Exported.tgz user@\[<ip%interface>\]:/tmp` 
 ```
 to copy <code> /home/duser/mk6/stack/apps/exampleETSI/exampleETSI-mk5-Exported.tgz</code> to cohda model.
 user name & PW: user
