@@ -44,7 +44,7 @@
 #include <unistd.h> // for close
 #define BUFLEN 512  //Max length of buffer
 #define PORT2 4320   //The port on which to listen for incoming data
-#define SERVER "141.30.187.162"
+#define SERVER "192.168.10.3"
 //json
 #include <cJSON.h>
 #include <cJSON.c>
@@ -676,6 +676,8 @@ static void RAWIts_ExtCallback(tExtEventId Event,
         //set VAM message to pudpclient
 	pudpclient.lat=(double)pRawRx->vammsg.vam.vamParameters.basicContainer.referencePosition.latitude;
 	pudpclient.lon=(double)pRawRx->vammsg.vam.vamParameters.basicContainer.referencePosition.longitude;
+	printf("recive lat through wlanp: %f\n",pudpclient.lat);
+	printf("recive lon through wlanp: %f\n",pudpclient.lon);
 
         int resudpclient = udpclient();
         if (resudpclient)
@@ -722,7 +724,8 @@ static int RAW_MsgCreate(RAW_RAW **ppMsg,const struct LPHData *pLPHData)
 	(*ppMsg)->vammsg.vam.generationDeltaTime=1/RAWITS_CONFIG_VALUE_DEFAULT_TXINTERVAL;
 	(*ppMsg)->vammsg.vam.vamParameters.basicContainer.stationType=2;
 	//set VAM message from pLPHData
-	printf("dummy: %d",pLPHData->Pos.Latitude);
+	printf("create test Latitude of mk6 module: %d\n",pLPHData->Pos.Latitude);
+
 	/// J2735's DE_Latitude.
 	/// Range: -900000000..900000001 (-90..90) Units: 1/10 micro degree
 	//(*ppMsg)->vammsg.vam.vamParameters.basicContainer.referencePosition.latitude= pLPHData->Pos.Latitude;
@@ -806,24 +809,22 @@ int udpclient()
             die("sendto()");
         }
         
-         printf("%s\n",json_data);
+         printf("Sent out position of bike in json type through udp:%s\n",json_data);
 
-       //memset(message, 0, sizeof(message));
-      // sleep(0.5);
        free(json_data);
        cJSON_Delete(json); 
        
        //receive a reply and print it
        //try to receive some data, this is a blocking call
-        char json_back[512];
-        memset(json_back,'\0', 512);
-        if (recvfrom(s, json_back, 512, 0, (struct sockaddr *) &si_other, &slen) == -1)
-        {
-            die("recvfrom()");
-        }
-        printf("Receive Backdata:\n");
-        puts(json_back);
-        //free(json_back);
+        //char json_back[512];
+        //memset(json_back,'\0', 512);
+        //if (recvfrom(s, json_back, 512, 0, (struct sockaddr *) &si_other, &slen) == -1)
+        //{
+        //    die("recvfrom()");
+        //}
+        //printf("Receive backdata through upd:\n\n");
+        //puts(json_back);
+
        
        
     close(s);

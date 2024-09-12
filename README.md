@@ -1,6 +1,8 @@
 # VAM C-ITS for PrioBike
 This package is specifically designed to facilitate V2X (Vehicle-to-Everything) message communication using the Cohda Wireless SDK. The data flow process within this system is structured as follow. The stability of data transmission requires additional validation.
 
+![Alt text](https://github.com/xyzxyz0428/vam/image/frame.png)
+
 ## Scripts Preparation
 ### Cohda SDK
 The Latest SDK containing both MK5 (DSRC), MK6C (C-V2X), MK6 (DSRC + C-V2X) and x64 software is found in [Releases_SDK_and_MKx_2023->SDK](https://cohdawireless.account.box.com/login?redirect_url=%2Ffolder%2F236504075293). You could find official tutorials for [Installing and configuring the MKx SDK in VM](https://support.cohdawireless.com/hc/en-us/articles/202668864-Installing-and-configuring-the-MKx-SDK) and [Building MKx Image using SDK and adding Libraries](https://support.cohdawireless.com/hc/en-us/articles/115002590143-Building-MKx-Image-using-SDK-and-adding-Libraries)
@@ -56,7 +58,7 @@ user name & PW: user
 
 ### Run UDP client script
 
-<code> VAMinput.py</code> can receive test Priobike data from backend through MQTT and send it to RSU thorugh UDP. Feedback message can be received as well to check the data flow. This file can be compiled using GCC and generate exe file in Windows.
+<code> VAMinput.py</code> can receive test Priobike data from backend through MQTT and send it to RSU thorugh UDP. 
 
 ``` 
 gcc -o udp_server udp_server.c -lws2_32
@@ -66,8 +68,8 @@ gcc -o udp_server udp_server.c -lws2_32
 
 1. SSH or PuTTY
 
-mk5: fe80::6e5:48ff:fe20:5a88%<interface>
-mk6: fe80::6e5:48ff:fe50:01A0%<interface> 
+mk5: fe80::6e5:48ff:fe20:5a88%<interface>  141.30.187.201
+mk6: fe80::6e5:48ff:fe50:01A0%<interface>  192.168.10.2
 interface can be checked with ipconfig in Windows and ifconfig in Linux
 
 3. unzipping uploaded exampleETSI-mk5-Exported.tgz
@@ -86,11 +88,10 @@ gpspipe -r
 
 5. shutdown.
 ```
-/mnt/rw/absolutETSI/rc.exampleETSI stop raw
+/mnt/rw/exampleETSI/rc.exampleETSI stop raw
 ```
 
 ### Run UDP Server Script
-- This file involves UDP server to exact data from OBU units. 
-- <code>/vam_server/dynamic_map_test/map_dynamic_update.py</code> includes python application using PyQt5 to display and dynamically update a real-time map in a GUI window.
+This file involves UDP server to exact data from OBU units and using PyQt5 to display and dynamically update a real-time map in a GUI window. Internet is neccessary for map loading.
 
 

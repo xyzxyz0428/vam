@@ -92,9 +92,8 @@ ItsPduHeader ::= SEQUENCE {
     positionConfidenceEllipse PosConfidenceEllipse ,
     altitude Altitude
 }
-    Longitude ::= INTEGER {oneMicrodegreeEast (10), oneMicrodegreeWest (-10), unavailable(1800000001)} (-1800000000..1800000001)
-
-    Latitude ::= INTEGER {oneMicrodegreeNorth (10), oneMicrodegreeSouth (-10), unavailable(900000001)} (-900000000..900000001)
+    Longitude ::= REAL 
+    Latitude ::= REAL 
     Altitude ::= SEQUENCE {
     altitudeValue AltitudeValue,
     altitudeConfidence AltitudeConfidence

@@ -528,14 +528,14 @@ static int RAWIts_ReqSend(tETSIMSGHandleCode Handle,
 	}
 
 	//UDP server
-	printf("server start\n");
+
 	int resudpserver = udpserver();
 	if (resudpserver)
 	{
 		d_error(D_ERR, 0, "UDP server failed\n");
 		printf("UDP server failed\n");
 	}
-	printf("server finished\n");
+
 	//get LPH data of ego module
 	const struct LPHData * plphData = 0;
 	int rc = LPH_Data(lphhandle, &plphData);
@@ -716,7 +716,7 @@ static int RAW_MsgCreate(RAW_RAW **ppMsg,const struct LPHData *pLPHData)
 	(*ppMsg)->vammsg.vam.vamParameters.basicContainer.stationType=2;
 	//set VAM message from pLPHData
 	//dummy for use pLPHData
-	printf("dummy:%d",pLPHData->Pos.Latitude);
+	printf("create msg with Latitude of mk5:%d.\n",pLPHData->Pos.Latitude);
 	/// J2735's DE_Latitude.
 	/// Range: -900000000..900000001 (-90..90) Units: 1/10 micro degree
 	//(*ppMsg)->vammsg.vam.vamParameters.basicContainer.referencePosition.latitude= pLPHData->Pos.Latitude;
@@ -750,7 +750,8 @@ static int RAW_MsgCreate(RAW_RAW **ppMsg,const struct LPHData *pLPHData)
 	/// J2735's DE_Longitude.
 	/// Range -1799999999..1800000001 (-180..180) Units: 1/10 micro degree
 	(*ppMsg)->vammsg.vam.vamParameters.basicContainer.referencePosition.longitude= pudpserver.lon;
-	
+	printf("create msg with lat of bike from backend and send out through wlanp:%f.\n",(*ppMsg)->vammsg.vam.vamParameters.basicContainer.referencePosition.latitude);
+	printf("create msg with lon of bike from backend and send out through wlanp:%f.\n",(*ppMsg)->vammsg.vam.vamParameters.basicContainer.referencePosition.longitude);
 	RetVal = 0;
 	goto Success;
 
@@ -772,7 +773,7 @@ void die(char *s)
 }
 //udpserver
 int udpserver ()
-{   printf("start server");
+{   
 struct sockaddr_in si_me, si_other;
 char buf[BUFLEN];
 double lat;
@@ -794,8 +795,7 @@ if( bind(s , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
 	die("bind");
 }
 //keep listening for data
-printf("start the listening\n");
-printf("Waiting for data...\n");
+//printf("Waiting for data...\n");
 fflush(stdout);
 //try to receive some data, this is a blocking call
 if ((recv_len = recvfrom(s, buf, sizeof(buf), 0, (struct sockaddr *) &si_other, &slen)) == -1U)
@@ -805,7 +805,6 @@ if ((recv_len = recvfrom(s, buf, sizeof(buf), 0, (struct sockaddr *) &si_other, 
 }
 
 if (sscanf(buf, "pos: (%lf, %lf)", &lat, &lon) == 2) {
-	printf("Latitude: %f, Longitude: %f\n", lat, lon);
 	pudpserver.lat=lat;
 	pudpserver.lon=lon;
 } else {
@@ -825,7 +824,7 @@ if (sendto(s, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
 {
 	die("sendto()");
 }
-printf("send Data back\n");
+printf("send data back through udp \n\n");
 fflush(stdout);
 memset(buf,0,sizeof(buf));
 close(s);
