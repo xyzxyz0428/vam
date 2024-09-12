@@ -1,7 +1,7 @@
 # VAM C-ITS for PrioBike
 This package is specifically designed to facilitate V2X (Vehicle-to-Everything) message communication using the Cohda Wireless SDK. The data flow process within this system is structured as follow. The stability of data transmission requires additional validation.
 
-![Alt text](https://github.com/xyzxyz0428/vam/image/frame.png)
+![Alt text](https://github.com/xyzxyz0428/vam/blob/main/image/frame.png)
 
 ## Scripts Preparation
 ### Cohda SDK
