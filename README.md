@@ -61,7 +61,7 @@ user name & PW: user
 <code> VAMinput.py</code> can receive test Priobike data from backend through MQTT and send it to RSU thorugh UDP. 
 
 ``` 
-gcc -o udp_server udp_server.c -lws2_32
+python VAMinput.py
 ```
 
 ### Start Cohda 
